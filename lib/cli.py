@@ -36,7 +36,19 @@ def lose(player): ## What is displayed when you BUST
     return False
 
 def win(player, player2): ## What is displayed when you WIN
-    if player_hand_value(player) == 21 or 21 > player_hand_value(player) > player_hand_value(player2) :
+    if 21 > player_hand_value(player) > player_hand_value(player2) :
+        return True
+    return False
+
+## INSTANT WIN / LOSE
+
+def instant_lose(player, house): ## What is displayed when you BUST
+    if player_hand_value(player) > 21 or player_hand_value(house) == 21:
+        return True
+    return False
+
+def instant_win(player, house): ## What is displayed when you WIN
+    if player_hand_value(player) == 21 or player_hand_value(house) >21:
         return True
     return False
 
@@ -44,17 +56,20 @@ def player_hand_value(player):
     total = 0
     for card in player.hand:
         if "A" in card.name:
-            if (total + 11) <= 21:
-                total += 11
-            else:
-                total += 1
+            total += 11
         elif "J" in card.name or "Q" in card.name or "K" in card.name:
             total += 10
         else:
             total += card.value
+    for card in player.hand:
+        if "A" == card.name:
+            total = set_ace(total)
     return total
 
-
+def set_ace(total):
+    if total > 21:
+        return total - 10
+    return total
 def game_logic():
     ## Define the players names
     user = Player("user")
@@ -69,18 +84,21 @@ def game_logic():
     display_hand(user)
     # print("Would you like to HIT or STAY?")
     ## Get user input
+    # ipdb.set_trace()
     answer = input("Would you like to HIT or STAY? \n")
-    while answer in yes and not lose(user):
+    while answer in yes:
         print('Here ya go fella')
         user.new_card()
         display_hand(user)
         lose(user)
-        if not lose(user):
-            answer = input("Would you like to HIT or STAY? \n")
-        if lose(user):
+        if instant_lose(user, house):
             print(f'{user.name} has bust')
-        if win(user, house):
+            break
+        if instant_win(user, house):
             print(f'Looks like ya won ya sumvabitch!')
+            break
+        if not instant_lose(user, house) and player_hand_value(user) != 21:
+            answer = input("Would you like to HIT or STAY? \n")
         
         
     
