@@ -3,10 +3,12 @@ class Card():
 
     def __init__(self, player) -> None:
         self.value = randint(1,13)
+        self._suit = randint(1,4)
         player.hand.append(self)
 
-    def get_card_name(self):
-        cards = {
+    @property
+    def name(self):
+        values = {
             "2":"2",
             "3":"3",
             "4":"4",
@@ -21,4 +23,17 @@ class Card():
             "13":"K",
             "1":"A"
         }
-        return cards[f"{self.value}"]
+        return values[f"{self.value}"]
+
+    @property
+    def suit(self):
+        cards = {
+            "1":"♠",
+            "2":"♥",
+            "3":"♣",
+            "4":"♦"
+        }
+        return cards[f"{self._suit}"]
+    
+    def __repr__(self) -> str:
+        return f"{self.name}{self.suit}"

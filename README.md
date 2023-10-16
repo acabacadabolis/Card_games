@@ -9,6 +9,8 @@ BlackJack on command line game
 
     Class Card
         values
+            numerical value
+            suit
     Class Player
         name
         hand = list of cards
