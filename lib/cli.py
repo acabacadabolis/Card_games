@@ -168,4 +168,8 @@ def war():
         war()
 ##Launch Game
 #blackjack()
-war()
+game = input("Would you like to player Blackjack or War?\n")
+if game == "War":
+    war()
+if game == "Blackjack":
+    blackjack()
