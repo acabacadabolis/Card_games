@@ -25,9 +25,8 @@ def input_text(): ## This will allow the user to input text at certain moments
     pass
 
 def display_hand(player):
-    print(f"Your hand: {player.hand}")
-    total = player_hand_value(player)
-    print(f'Your total: {total}')
+    print(f"{player.name} hand: {player.hand}")
+    print(f'{player.name} total: {player_hand_value(player)}')
 
 
 def lose(player): ## What is displayed when you BUST
@@ -42,13 +41,13 @@ def win(player, player2): ## What is displayed when you WIN
 
 ## INSTANT WIN / LOSE
 
-def instant_lose(player, house): ## What is displayed when you BUST
-    if player_hand_value(player) > 21 or player_hand_value(house) == 21:
+def instant_lose(player): ## What is displayed when you BUST
+    if player_hand_value(player) > 21:
         return True
     return False
 
-def instant_win(player, house): ## What is displayed when you WIN
-    if player_hand_value(player) == 21 or player_hand_value(house) >21:
+def instant_win(player): ## What is displayed when you WIN
+    if player_hand_value(player) == 21:
         return True
     return False
 
@@ -63,14 +62,11 @@ def player_hand_value(player):
             total += card.value
     for card in player.hand:
         if "A" == card.name:
-            total = set_ace(total)
+            if total > 21:
+                total - 10
     return total
 
-def set_ace(total):
-    if total > 21:
-        return total - 10
-    return total
-def game_logic():
+def blackjack():
     ## Define the players names
     user = Player("user")
     house = Player("house")
@@ -82,23 +78,44 @@ def game_logic():
     house.new_card()
     # ipdb.set_trace()
     display_hand(user)
+    display_hand(house)
     # print("Would you like to HIT or STAY?")
     ## Get user input
-    # ipdb.set_trace()
     answer = input("Would you like to HIT or STAY? \n")
     while answer in yes:
         print('Here ya go fella')
         user.new_card()
         display_hand(user)
-        lose(user)
-        if instant_lose(user, house):
+        if instant_lose(user):
             print(f'{user.name} has bust')
             break
-        if instant_win(user, house):
+        if instant_win(user):
             print(f'Looks like ya won ya sumvabitch!')
             break
-        if not instant_lose(user, house) and player_hand_value(user) != 21:
+        if not instant_lose(user):
             answer = input("Would you like to HIT or STAY? \n")
+
+    if not (instant_win(user) or instant_lose(user)):
+        print("\nHouse turn")
+        while player_hand_value(house)<17:
+            house.new_card()
+            display_hand(house)
+        if instant_lose(house):
+            print(f'{house.name} has bust')
+        if instant_win(house):
+            print(f'House always wins')
+        if win(user, house):
+            print(f'Looks like ya won ya sumvabitch!')
+        if win(house, user):
+            print(f'House always wins')
+
+    repeat = input("would you like to play again? \n")
+    if repeat in yes:
+        blackjack()
+        
+
+
+    
         
         
     
@@ -121,4 +138,4 @@ def game_logic():
 
 
 ## Just adding to make something new for Github
-game_logic()
+blackjack()
