@@ -11,7 +11,6 @@ house_total = 0
 chatter = ""
 yes = ["hit", "HIT", "y", "Y", "YES","yes"]
 no = "stay" or "STAY" or "n" or "N" or "NO" or "no"
-answer = None
 # player_wins = 0 ## Log how many wins the player has
 # player_money = 0 ## player should be able to bet? Idk
 
@@ -28,25 +27,32 @@ def display_hand(player):
     print(f"{player.name} hand: {player.hand}")
     print(f'{player.name} total: {player_hand_value(player)}')
 
+def war_hand(player):
+    if len(player.hand):
+        player.hand[0] = Card(player)
+        player.hand[1] = Card(player)
+    else:
+        player.new_card()
+        player.new_card()
+    print(f"User's Card:{player.hand[0]}\nHouse's Card:{player.hand[1]}")
 
-def lose(player): ## What is displayed when you BUST
-    if player_hand_value(player) > 21:
-        return True
-    return False
+def war_clear_board(player):
+    for card in player.hand:
+        player.hand.remove(card)
 
-def win(player, player2): ## What is displayed when you WIN
+def win(player, player2): ## Check if a player won
     if 21 > player_hand_value(player) > player_hand_value(player2) :
         return True
     return False
 
 ## INSTANT WIN / LOSE
 
-def instant_lose(player): ## What is displayed when you BUST
+def instant_lose(player): ## Check if this player instantly lost
     if player_hand_value(player) > 21:
         return True
     return False
 
-def instant_win(player): ## What is displayed when you WIN
+def instant_win(player): ## Check if this player instantly won
     if player_hand_value(player) == 21:
         return True
     return False
@@ -70,18 +76,17 @@ def blackjack():
     ## Define the players names
     user = Player("user")
     house = Player("house")
-
-## GAME START
+    answer = None
+    ##Game Start
     user.new_card()
     user.new_card()
     house.new_card()
     house.new_card()
-    # ipdb.set_trace()
     display_hand(user)
     display_hand(house)
-    # print("Would you like to HIT or STAY?")
-    ## Get user input
-    answer = input("Would you like to HIT or STAY? \n")
+    ##User Turn
+    if not instant_win(house):
+        answer = input("Would you like to HIT or STAY? \n")
     while answer in yes:
         print('Here ya go fella')
         user.new_card()
@@ -89,53 +94,74 @@ def blackjack():
         if instant_lose(user):
             print(f'{user.name} has bust')
             break
-        if instant_win(user):
+        elif instant_win(user):
             print(f'Looks like ya won ya sumvabitch!')
             break
-        if not instant_lose(user):
+        else:
             answer = input("Would you like to HIT or STAY? \n")
-
+    ##House Turn
     if not (instant_win(user) or instant_lose(user)):
-        print("\nHouse turn")
+        print("\n")
         while player_hand_value(house)<17:
             house.new_card()
             display_hand(house)
         if instant_lose(house):
             print(f'{house.name} has bust')
-        if instant_win(house):
+        elif instant_win(house):
             print(f'House always wins')
-        if win(user, house):
+        elif win(user, house):
             print(f'Looks like ya won ya sumvabitch!')
-        if win(house, user):
+        elif win(house, user):
             print(f'House always wins')
-
+        else:
+            print("Evenly matched")
+    ##Replay Option
     repeat = input("would you like to play again? \n")
     if repeat in yes:
         blackjack()
-        
 
-
-    
-        
-        
-    
-    ## if hand is under 21
-
-
-    # ## Instant WIN/LOSE conditions
-    # if user.get_hand_value > 21 or house.get_hand_value == 21:
-    #     lose()
-    # if user.get_hand_value == 21 or house.get_hand_value < 21:
-    #     win()
-    # ## Secondary Win/Lose conditions --- on STAY
-    # if house.stay == True:
-    #     if user.get_hand_value <= house.get_hand_value: ## and house_get_hand_value < 21 REDUNDANT
-    #         lose()
-    #     elif user.get_hand_value > house.get_hand_value: ## and house_get_hand_value < 21 REDUNDANT
-    #         win()
-    #     ## Splitting on doubles
-
-
-
-## Just adding to make something new for Github
-blackjack()
+def war():
+    user = Player("user")
+    house = Player("house")
+    board = Player("board")
+    war_pile = Player("pile")
+    ##War Round
+    repeat = "yes"
+    while repeat in yes:
+        war_hand(board)
+        while len(board.hand):
+            if board.hand[0].value > board.hand[1].value:
+                user.hand.append(board.hand.pop())
+                user.hand.append(board.hand.pop())
+                if len(war_pile.hand):
+                    for card in war_pile.hand:
+                        user.hand.append(war_pile.hand.pop())
+                print(f"User's Deck {user.hand}")
+                print(f"House's Deck {house.hand}")
+            elif board.hand[1].value > board.hand[0].value:
+                house.hand.append(board.hand.pop())
+                house.hand.append(board.hand.pop())
+                if len(war_pile.hand):
+                    for card in war_pile.hand:
+                        house.hand.append(war_pile.hand.pop())
+                print(f"User's Deck {user.hand}")
+                print(f"House's Deck {house.hand}")
+            elif board.hand[1].value == board.hand[0].value:
+                war_pile.hand.append(board.hand)
+                for _ in range(6):
+                    war_pile.new_card()
+                print(f"{war_pile.hand}")
+                war_hand(board)
+        repeat = input("Continue?\n")
+    if len(user.hand) > len(house.hand):
+        print("You've Won")
+    elif len(user.hand) < len(house.hand):
+        print("You've Lost")
+    else:
+        print("Y'all Tied")
+    new_game = input("New Game?\n")
+    if new_game in yes:
+        war()
+##Launch Game
+#blackjack()
+war()
