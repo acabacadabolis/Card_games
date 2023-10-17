@@ -37,8 +37,8 @@ def war_hand(player):
     print(f"User's Card:{player.hand[0]}\nHouse's Card:{player.hand[1]}")
 
 def war_clear_board(player):
-    for card in player.hand:
-        player.hand.remove(card)
+    for i in range(len(player.hand)):
+        player.hand.pop(0)
 
 def win(player, player2): ## Check if a player won
     if 21 > player_hand_value(player) > player_hand_value(player2) :
@@ -127,30 +127,34 @@ def war():
     war_pile = Player("pile")
     ##War Round
     repeat = "yes"
-    while repeat in yes:
+    while repeat in yes: ##While user wants to continue current game
         war_hand(board)
-        while len(board.hand):
-            if board.hand[0].value > board.hand[1].value:
+
+        while len(board.hand):  ##While there are cards on the board
+            if board.hand[0].value > board.hand[1].value:   ##User wins round
                 user.hand.append(board.hand.pop())
                 user.hand.append(board.hand.pop())
                 if len(war_pile.hand):
-                    for card in war_pile.hand:
-                        user.hand.append(war_pile.hand.pop())
+                    for i in range(len(war_pile.hand)):
+                        user.hand.append(war_pile.hand[i])
+                    war_clear_board(war_pile)
                 print(f"User's Deck {user.hand}")
                 print(f"House's Deck {house.hand}")
-            elif board.hand[1].value > board.hand[0].value:
+            elif board.hand[1].value > board.hand[0].value:    ##House wins round
                 house.hand.append(board.hand.pop())
                 house.hand.append(board.hand.pop())
                 if len(war_pile.hand):
-                    for card in war_pile.hand:
-                        house.hand.append(war_pile.hand.pop())
+                    for i in range(len(war_pile.hand)):
+                        house.hand.append(war_pile.hand[i])
+                    war_clear_board(war_pile)
                 print(f"User's Deck {user.hand}")
                 print(f"House's Deck {house.hand}")
-            elif board.hand[1].value == board.hand[0].value:
-                war_pile.hand.append(board.hand)
+            elif board.hand[1].value == board.hand[0].value:    ##Round is tied
+                war_pile.hand.append(board.hand.pop())
+                war_pile.hand.append(board.hand.pop())
                 for _ in range(6):
                     war_pile.new_card()
-                print(f"{war_pile.hand}")
+                print(f"War was Declared. War spoils:{war_pile.hand}")
                 war_hand(board)
         repeat = input("Continue?\n")
     if len(user.hand) > len(house.hand):
