@@ -1,5 +1,7 @@
 from card import Card
 from player import Player
+from random import randint
+import os
 import ipdb
 
 
@@ -14,14 +16,25 @@ no = "stay" or "STAY" or "n" or "N" or "NO" or "no"
 # player_wins = 0 ## Log how many wins the player has
 # player_money = 0 ## player should be able to bet? Idk
 
-def splash_screen(): ## Figure out what to display when the user boots the program
-    pass
+def init_match_board(player):
+    for x in range(5): ## Only Generate 5 of the 9 cards 4 will be duplicates
+        player.new_card()
+    match_hand = []
+    for i in range(4): ## Duplicates of the 4 cards
+        match_hand.append(player.hand[i]) 
+    board = { ## Dictionary of Board to call for A1, A2, etc.
+    "A1": player.hand.pop(randint(0,4)),
+    "A2": match_hand.pop(randint(0,3)),
+    "A3": player.hand.pop(randint(0,3)),
+    "B1": match_hand.pop(randint(0,2)),
+    "B2": player.hand.pop(randint(0,2)),
+    "B3": match_hand.pop(randint(0,1)),
+    "C1": player.hand.pop(randint(0,1)),
+    "C2": match_hand.pop(),
+    "C3": player.hand.pop()
+     }
 
-def banter(): ## Display banter/chatter from the House Dealer
-    pass
-
-def input_text(): ## This will allow the user to input text at certain moments
-    pass
+    return board
 
 def display_hand(player):
     print(f"{player.name} hand: {player.hand}")
@@ -73,6 +86,7 @@ def player_hand_value(player):
     return total
 
 def blackjack():
+    os.system('clear') ## Clear Screen
     ## Define the players names
     user = Player("user")
     house = Player("house")
@@ -121,6 +135,7 @@ def blackjack():
         blackjack()
 
 def war():
+    os.system('clear') ## Clear Screen
     user = Player("user")
     house = Player("house")
     board = Player("board")
@@ -168,8 +183,20 @@ def war():
         war()
 ##Launch Game
 #blackjack()
-game = input("Would you like to player Blackjack or War?\n")
-if game == "War":
-    war()
-if game == "Blackjack":
-    blackjack()
+def match():
+    os.system('clear') ## Clear Screen
+    player = Player('player')
+    board = init_match_board(player)
+    print(f'{board["A1"]}  {board["A2"]}  {board["A3"]} ')
+    print(f'{board["B1"]}  {board["B2"]}  {board["B3"]} ')
+    print(f'{board["C1"]}  {board["C2"]}  {board["C3"]} ')
+
+match()
+# game = input("Would you like to player Blackjack or War?\n")
+# if game == "War":
+#     war()
+# if game == "Blackjack":
+#     blackjack()
+# if game == "Match":
+#     match()
+
