@@ -214,17 +214,17 @@ def match():
     guessing = "yes"
     count_match = 0
     while guessing.lower() in yes:
-        guess1 = input("Pick a Card\n")
+        guess1 = input("\033[93mPick a Spot\033[0m\n")
         if guess1.upper() in board:
             guess_board[f"{guess1.upper()}"] = board[f"{guess1.upper()}"]
             print_board(guess_board)
-            guess2 = input("Pick a second Card\n")
+            guess2 = input("\033[93mPick a second Spot\033[0m\n")
             if guess2.upper() in board:
                 if guess_board[f"{guess2.upper()}"] != board[f"{guess2.upper()}"]:
                     guess_board[f"{guess2.upper()}"] = board[f"{guess2.upper()}"]
                     print_board(guess_board)
                     if guess_board[f"{guess1.upper()}"] == guess_board[f"{guess2.upper()}"]:
-                        print("\033[93mRight guess\033[0m")
+                        print("\033[94mRight guess\033[0m")
                         count_match += 1
                     else:
                         print("\033[91mThey don't match\033[0m")
@@ -241,10 +241,10 @@ def match():
         elif count_match == 4:
             print("\033[92mYou won\033[0m")
             guessing = "asd"
-    repeat = input("Play again?\n")
+    repeat = input("\033[93mPlay again?\033[0m\n")
     if repeat in yes:
         match()
-    new_game = input("Play a different game?\n")
+    new_game = input("\033[93mDifferent Game?\033[0m\n")
     if new_game in yes:
         program_start()
 
