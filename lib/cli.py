@@ -36,6 +36,7 @@ def init_match_board(player):
 
     return board
 
+
 def display_hand(player):
     print(f"{player.name} hand: {player.hand}")
     print(f'{player.name} total: {player_hand_value(player)}')
@@ -185,11 +186,30 @@ def war():
 #blackjack()
 def match():
     os.system('clear') ## Clear Screen
+    no_display = "?"
     player = Player('player')
     board = init_match_board(player)
-    print(f'{board["A1"]}  {board["A2"]}  {board["A3"]} ')
-    print(f'{board["B1"]}  {board["B2"]}  {board["B3"]} ')
-    print(f'{board["C1"]}  {board["C2"]}  {board["C3"]} ')
+    
+    def check_slot():
+        A1 = "?"
+        A2 = "?"
+        A3 = "?"
+        B1 = "?"
+        B2 = "?"
+        B3 = "?"
+        C1 = "?"
+        C2 = "?"
+        C3 = "?"
+
+    # print(f'{board["A1"]}  {board["A2"]}  {board["A3"]} ')
+    # print(f'{board["B1"]}  {board["B2"]}  {board["B3"]} ')
+    # print(f'{board["C1"]}  {board["C2"]}  {board["C3"]} ')
+
+
+
+
+    ## input = "Choose your first card \n"
+
 
 match()
 # game = input("Would you like to player Blackjack or War?\n")
