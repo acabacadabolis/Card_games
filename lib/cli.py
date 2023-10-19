@@ -1,9 +1,33 @@
 from card import Card
 from player import Player
+from random import randint
 import ipdb
 
 ## Placeholder variables
 yes = [ "hit", "y" , "yes" ]
+
+def print_board(board):
+    print(f'\033[4m{board["A1"]} | {board["A2"]} | {board["A3"]}\n{board["B1"]} | {board["B2"]} | {board["B3"]}\033[0m\n{board["C1"]} | {board["C2"]} | {board["C3"]}')
+
+def init_match_board(player):
+    for x in range(5): ## Only Generate 5 of the 9 cards 4 will be duplicates
+        player.new_card()
+    match_hand = []
+    for i in range(4): ## Duplicates of the 4 cards
+        match_hand.append(player.hand[i]) 
+    board = { ## Dictionary of Board to call for A1, A2, etc.
+    "A1": player.hand.pop(randint(0,4)),
+    "A2": match_hand.pop(randint(0,3)),
+    "A3": player.hand.pop(randint(0,3)),
+    "B1": match_hand.pop(randint(0,2)),
+    "B2": player.hand.pop(randint(0,2)),
+    "B3": match_hand.pop(randint(0,1)),
+    "C1": player.hand.pop(randint(0,1)),
+    "C2": match_hand.pop(),
+    "C3": player.hand.pop()
+     }
+
+    return board
 
 def display_hand(player):
     print(f"{player.name} hand: \033[1m{player.hand}\033[0m")
@@ -160,7 +184,6 @@ def war():
         program_start()
 
 def match():
-    no_display = "?"
     player = Player('player')
     board = init_match_board(player)
     
@@ -188,14 +211,10 @@ def match():
         "C3": "C3"
     }
     print_board(guess_board)
-    # print(f'{board["A1"]}  {board["A2"]}  {board["A3"]} ')
-    # print(f'{board["B1"]}  {board["B2"]}  {board["B3"]} ')
-    # print(f'{board["C1"]}  {board["C2"]}  {board["C3"]} ')
     guessing = "yes"
     count_match = 0
     while guessing.lower() in yes:
         guess1 = input("Pick a Card\n")
-        
         if guess1.upper() in board:
             guess_board[f"{guess1.upper()}"] = board[f"{guess1.upper()}"]
             print_board(guess_board)
@@ -217,12 +236,17 @@ def match():
                 print('\033[91mNot a valid guess\033[0m')
         else:
             print('\033[91mNot a valid guess\033[0m')
-        
         if count_match < 3:
             pass
         elif count_match == 4:
             print("\033[92mYou won\033[0m")
             guessing = "asd"
+    repeat = input("Play again?\n")
+    if repeat in yes:
+        match()
+    new_game = input("Play a different game?\n")
+    if new_game in yes:
+        program_start()
 
 def program_start():
     game = input("\033[93mWould you like to player Blackjack or War?\033[0m\n")
