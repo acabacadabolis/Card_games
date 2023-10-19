@@ -158,12 +158,79 @@ def war():
         game_select = input("\033[93mDifferent Game?\033[0m\n")
     if game_select.lower() in yes:
         program_start()
-##Launch Game
+
+def match():
+    no_display = "?"
+    player = Player('player')
+    board = init_match_board(player)
+    
+    hidden_board ={
+        "A1": "A1",
+        "A2": "A2",
+        "A3": "A3",
+        "B1": "B1",
+        "B2": "B2",
+        "B3": "B3",
+        "C1": "C1",
+        "C2": "C2",
+        "C3": "C3"
+    }
+
+    guess_board = {
+        "A1": "A1",
+        "A2": "A2",
+        "A3": "A3",
+        "B1": "B1",
+        "B2": "B2",
+        "B3": "B3",
+        "C1": "C1",
+        "C2": "C2",
+        "C3": "C3"
+    }
+    print_board(guess_board)
+    # print(f'{board["A1"]}  {board["A2"]}  {board["A3"]} ')
+    # print(f'{board["B1"]}  {board["B2"]}  {board["B3"]} ')
+    # print(f'{board["C1"]}  {board["C2"]}  {board["C3"]} ')
+    guessing = "yes"
+    count_match = 0
+    while guessing.lower() in yes:
+        guess1 = input("Pick a Card\n")
+        
+        if guess1.upper() in board:
+            guess_board[f"{guess1.upper()}"] = board[f"{guess1.upper()}"]
+            print_board(guess_board)
+            guess2 = input("Pick a second Card\n")
+            if guess2.upper() in board:
+                if guess_board[f"{guess2.upper()}"] != board[f"{guess2.upper()}"]:
+                    guess_board[f"{guess2.upper()}"] = board[f"{guess2.upper()}"]
+                    print_board(guess_board)
+                    if guess_board[f"{guess1.upper()}"] == guess_board[f"{guess2.upper()}"]:
+                        print("\033[93mRight guess\033[0m")
+                        count_match += 1
+                    else:
+                        print("\033[91mThey don't match\033[0m")
+                        guess_board[f"{guess1.upper()}"] = hidden_board[f"{guess1.upper()}"]
+                        guess_board[f"{guess2.upper()}"] = hidden_board[f"{guess2.upper()}"]
+                else:
+                    print('\033[91mNot a valid guess\033[0m')
+            else:
+                print('\033[91mNot a valid guess\033[0m')
+        else:
+            print('\033[91mNot a valid guess\033[0m')
+        
+        if count_match < 3:
+            pass
+        elif count_match == 4:
+            print("\033[92mYou won\033[0m")
+            guessing = "asd"
+
 def program_start():
     game = input("\033[93mWould you like to player Blackjack or War?\033[0m\n")
     if game.lower() == "war":
         war()
     if game.lower() == "blackjack":
         blackjack()
-
+    if game.lower() == "matching":
+        match()
+        
 program_start()
