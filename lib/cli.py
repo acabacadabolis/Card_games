@@ -190,16 +190,21 @@ def match():
     player = Player('player')
     board = init_match_board(player)
     
+    hidden_board ={
+        "A1": "?",
+        "A2": "?",
+        "A3": "?",
+        "B1": "?",
+        "B2": "?",
+        "B3": "?",
+        "C1": "?",
+        "C2": "?",
+        "C3": "?"
+    }
+
     def check_slot():
-        A1 = "?"
-        A2 = "?"
-        A3 = "?"
-        B1 = "?"
-        B2 = "?"
-        B3 = "?"
-        C1 = "?"
-        C2 = "?"
-        C3 = "?"
+    for spot in hidden_board
+
 
     # print(f'{board["A1"]}  {board["A2"]}  {board["A3"]} ')
     # print(f'{board["B1"]}  {board["B2"]}  {board["B3"]} ')
