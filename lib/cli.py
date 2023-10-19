@@ -9,7 +9,7 @@ hand_total = 0
 house_card = 0
 house_total = 0
 chatter = ""
-yes = ["hit", "HIT", "y", "Y", "YES","yes"]
+yes = [ "hit", "y" , "yes" ]
 no = "stay" or "STAY" or "n" or "N" or "NO" or "no"
 # player_wins = 0 ## Log how many wins the player has
 # player_money = 0 ## player should be able to bet? Idk
@@ -87,7 +87,7 @@ def blackjack():
     ##User Turn
     if not instant_win(house):
         answer = input("Would you like to HIT or STAY? \n")
-    while answer in yes:
+    while answer.lower() in yes:
         print('Here ya go fella')
         user.new_card()
         display_hand(user)
@@ -117,7 +117,7 @@ def blackjack():
             print("Evenly matched")
     ##Replay Option
     repeat = input("would you like to play again? \n")
-    if repeat in yes:
+    if repeat.lower() in yes:
         blackjack()
 
 def war():
@@ -127,7 +127,7 @@ def war():
     war_pile = Player("pile")
     ##War Round
     repeat = "yes"
-    while repeat in yes: ##While user wants to continue current game
+    while repeat.lower() in yes: ##While user wants to continue current game
         war_hand(board)
 
         while len(board.hand):  ##While there are cards on the board
@@ -164,12 +164,126 @@ def war():
     else:
         print("Y'all Tied")
     new_game = input("New Game?\n")
-    if new_game in yes:
+    if new_game.lower() in yes:
         war()
 ##Launch Game
 #blackjack()
 game = input("Would you like to player Blackjack or War?\n")
-if game == "War":
+if game.lower() == "war":
     war()
-if game == "Blackjack":
+if game.lower() == "blackjack":
     blackjack()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
