@@ -249,12 +249,12 @@ def match():
         program_start()
 
 def program_start():
-    game = input("\033[93mWould you like to player Blackjack or War?\033[0m\n")
+    game = input("\033[93mWould you like to player Blackjack, War or Match Card?\033[0m\n")
     if game.lower() == "war":
         war()
     if game.lower() == "blackjack":
         blackjack()
-    if game.lower() == "matching":
+    if game.lower() == "match":
         match()
         
 program_start()
