@@ -2,30 +2,12 @@ from card import Card
 from player import Player
 import ipdb
 
-
 ## Placeholder variables
-card = []
-hand_total = 0
-house_card = 0
-house_total = 0
-chatter = ""
 yes = [ "hit", "y" , "yes" ]
-no = "stay" or "STAY" or "n" or "N" or "NO" or "no"
-# player_wins = 0 ## Log how many wins the player has
-# player_money = 0 ## player should be able to bet? Idk
-
-def splash_screen(): ## Figure out what to display when the user boots the program
-    pass
-
-def banter(): ## Display banter/chatter from the House Dealer
-    pass
-
-def input_text(): ## This will allow the user to input text at certain moments
-    pass
 
 def display_hand(player):
-    print(f"{player.name} hand: {player.hand}")
-    print(f'{player.name} total: {player_hand_value(player)}')
+    print(f"{player.name} hand: \033[1m{player.hand}\033[0m")
+    print(f'{player.name} total: \033[1m{player_hand_value(player)}\033[0m')
 
 def war_hand(player):
     if len(player.hand):
@@ -34,7 +16,7 @@ def war_hand(player):
     else:
         player.new_card()
         player.new_card()
-    print(f"User's Card:{player.hand[0]}\nHouse's Card:{player.hand[1]}")
+    print(f"User's Card:\033[1m{player.hand[0]}\033[0m\nHouse's Card:\033[1m{player.hand[1]}\033[0m")
 
 def war_clear_board(player):
     for i in range(len(player.hand)):
@@ -47,29 +29,29 @@ def win(player, player2): ## Check if a player won
 
 ## INSTANT WIN / LOSE
 
-def instant_lose(player): ## Check if this player instantly lost
-    if player_hand_value(player) > 21:
+def instant_win(player): ## Check if this player instantly won
+    if player_hand_value(player) == 21:
         return True
     return False
 
-def instant_win(player): ## Check if this player instantly won
-    if player_hand_value(player) == 21:
+def instant_lose(player): ## Check if this player instantly lost
+    if player_hand_value(player) > 21:
         return True
     return False
 
 def player_hand_value(player):
     total = 0
     for card in player.hand:
-        if "A" in card.name:
+        if "A" in card.name:##Ace adds 11 to hand value
             total += 11
         elif "J" in card.name or "Q" in card.name or "K" in card.name:
             total += 10
         else:
             total += card.value
     for card in player.hand:
-        if "A" == card.name:
+        if "A" == card.name:##Check if Ace is in hand when its over 21 and reduces hand value if it is
             if total > 21:
-                total - 10
+                total -= 10
     return total
 
 def blackjack():
@@ -85,40 +67,46 @@ def blackjack():
     display_hand(user)
     display_hand(house)
     ##User Turn
-    if not instant_win(house):
-        answer = input("Would you like to HIT or STAY? \n")
-    while answer.lower() in yes:
-        print('Here ya go fella')
-        user.new_card()
-        display_hand(user)
-        if instant_lose(user):
-            print(f'{user.name} has bust')
-            break
-        elif instant_win(user):
-            print(f'Looks like ya won ya sumvabitch!')
-            break
-        else:
-            answer = input("Would you like to HIT or STAY? \n")
+    if instant_win(user):
+        print(f'\033[92mLooks like ya won ya sumvabitch!\033[0m')
+    if not instant_win(house) and not instant_win(user):
+        answer = input("\033[93mWould you like to HIT or STAY?\033[0m\n")
+        while answer.lower() in yes:
+            print('\033[95mHere ya go fella\033[0m')
+            user.new_card()
+            display_hand(user)
+            if instant_lose(user):
+                print(f'\033[91m{user.name} has bust\033[0m')
+                break
+            elif instant_win(user):
+                print(f'\033[92mLooks like ya won ya sumvabitch!\033[0m')
+                break
+            else:
+                answer = input("\033[0mWould you like to HIT or STAY?\033[0m\n")
     ##House Turn
     if not (instant_win(user) or instant_lose(user)):
-        print("\n")
-        while player_hand_value(house)<17:
+
+        while player_hand_value(house) < 17 :
             house.new_card()
             display_hand(house)
         if instant_lose(house):
-            print(f'{house.name} has bust')
+            print(f'\033[92m{house.name} has bust\033[0m')
         elif instant_win(house):
-            print(f'House always wins')
+            print(f'\033[91mHouse always wins\033[0m')
         elif win(user, house):
-            print(f'Looks like ya won ya sumvabitch!')
+            print(f'\033[92mLooks like ya won ya sumvabitch!\033[0m')
         elif win(house, user):
-            print(f'House always wins')
+            print(f'\033[91mHouse always wins\033[0m')
         else:
-            print("Evenly matched")
+            print(f"\033[94mEvenly matched\033[0m")
     ##Replay Option
-    repeat = input("would you like to play again? \n")
+    repeat = input("\033[93mWould you like to play again?\033[0m\n")
     if repeat.lower() in yes:
         blackjack()
+    else:
+        game_select = input("\033[93mDifferent Game?\033[0m\n")
+    if game_select.lower() in yes:
+        program_start()
 
 def war():
     user = Player("user")
@@ -138,8 +126,8 @@ def war():
                     for i in range(len(war_pile.hand)):
                         user.hand.append(war_pile.hand[i])
                     war_clear_board(war_pile)
-                print(f"User's Deck {user.hand}")
-                print(f"House's Deck {house.hand}")
+                print(f"User's Deck \033[1m{user.hand}\033[0m")
+                print(f"House's Deck \033[1m{house.hand}\033[0m")
             elif board.hand[1].value > board.hand[0].value:    ##House wins round
                 house.hand.append(board.hand.pop())
                 house.hand.append(board.hand.pop())
@@ -147,143 +135,35 @@ def war():
                     for i in range(len(war_pile.hand)):
                         house.hand.append(war_pile.hand[i])
                     war_clear_board(war_pile)
-                print(f"User's Deck {user.hand}")
-                print(f"House's Deck {house.hand}")
+                print(f"User's Deck \033[1m{user.hand}\033[0m")
+                print(f"House's Deck \033[1m{house.hand}\033[0m")
             elif board.hand[1].value == board.hand[0].value:    ##Round is tied
                 war_pile.hand.append(board.hand.pop())
                 war_pile.hand.append(board.hand.pop())
                 for _ in range(6):
                     war_pile.new_card()
-                print(f"War was Declared. War spoils:{war_pile.hand}")
+                print(f"\033[1m\033[95mWar was Declared. War spoils:{war_pile.hand}\033[0m")
                 war_hand(board)
-        repeat = input("Continue?\n")
+        repeat = input("\033[93mContinue?\033[0m\n")
     if len(user.hand) > len(house.hand):
-        print("You've Won")
+        print("\033[92mYou've Won\033[0m")
     elif len(user.hand) < len(house.hand):
-        print("You've Lost")
+        print("\033[91mYou've Lost\033[0m")
     else:
-        print("Y'all Tied")
-    new_game = input("New Game?\n")
+        print("\033[94mY'all Tied\033[0m")
+    new_game = input("\033[93mNew Game?\033[0m\n")
     if new_game.lower() in yes:
         war()
+    else:
+        game_select = input("\033[93mDifferent Game?\033[0m\n")
+    if game_select.lower() in yes:
+        program_start()
 ##Launch Game
-#blackjack()
-game = input("Would you like to player Blackjack or War?\n")
-if game.lower() == "war":
-    war()
-if game.lower() == "blackjack":
-    blackjack()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def program_start():
+    game = input("\033[93mWould you like to player Blackjack or War?\033[0m\n")
+    if game.lower() == "war":
+        war()
+    if game.lower() == "blackjack":
+        blackjack()
+
+program_start()
