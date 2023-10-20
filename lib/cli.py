@@ -232,13 +232,17 @@ def match():
                         guess_board[f"{guess2.upper()}"] = hidden_board[f"{guess2.upper()}"]
                 else:
                     print('\033[91mNot a valid guess\033[0m')
+                    guess_board[f"{guess1.upper()}"] = hidden_board[f"{guess1.upper()}"]
+                    
             else:
                 print('\033[91mNot a valid guess\033[0m')
+                guess_board[f"{guess1.upper()}"] = hidden_board[f"{guess1.upper()}"]
+                
         else:
             print('\033[91mNot a valid guess\033[0m')
-        if count_match < 3:
-            pass
-        elif count_match == 4:
+            
+            
+        if count_match == 4:
             print("\033[92mYou won\033[0m")
             guessing = "asd"
     repeat = input("\033[93mPlay again?\033[0m\n")
